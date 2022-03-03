@@ -3,9 +3,14 @@ cmake_minimum_required(VERSION 3.16)
 # set project name
 project(ATTITUDE_CONTROL C CXX)
 
+# sets the C/CXX standard versions
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+
 # ensures that the graphical dependencies are loaded
 find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(Catch2 3 REQUIRED)
 
 # add the generated libraries
 # add_subdirectory(external)

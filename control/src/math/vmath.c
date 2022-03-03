@@ -25,7 +25,7 @@ vec2 vec2_smul(const vec2 *v, const double s)
 
 double vec2_mag(const vec2 *v)
 {
-    return sqrt(v->x * v->x + v->y + v->y);
+    return sqrt(v->x * v->x + v->y * v->y);
 }
 
 vec2 vec2_norm(const vec2 *v)
@@ -142,5 +142,5 @@ vec4 vec4_norm(const vec4 *v)
 
 double vec4_dot(const vec4 *v1, const vec4 *v2)
 {
-    return v1->x * v2->x + v1->y * v2->y + v1->z * v2->z + v1->w + v2->w;
+    return v1->x * v2->x + v1->y * v2->y + v1->z * v2->z + v1->w * v2->w;
 }

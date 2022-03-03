@@ -91,10 +91,13 @@ vec3 quat_rot_vec(const quat *q, const vec3 *v)
     const quat q_v = quat_init(0, v->x, v->y, v->z);
     const quat q_inv = quat_inv(q);
 
-    const quat prod_rot_v = quat_mul(q, &q_v);
-    const quat prod_rot_v_norm = quat_mul(&prod_rot_v, &q_inv);
+    const quat prod_v_inv = quat_mul(&q_v, &q_inv);
+    const quat prod_q_v_inv = quat_mul(q, &prod_v_inv);
 
-    return prod_rot_v.v;
+    // const quat prod_rot_v = quat_mul(q, &q_v);
+    // const quat prod_rot_v_norm = quat_mul(&prod_rot_v, &q_inv);
+
+    return prod_q_v_inv.v;
 }
 
 vec4 quat_to_vec(const quat *q)

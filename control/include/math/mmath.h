@@ -30,6 +30,10 @@ mat3 mat3_smul(const mat3 *mt, const double s);
 
 double mat3_det(const mat3 *mt);
 
+mat3 mat3_transp(const mat3* mt);
+mat3 mat3_adj(const mat3* mt);
+mat3 mat3_inv(const mat3* mt);
+
 vec3 mat3_vmul(const mat3 *mt, const vec3 *v);
 
 typedef struct
