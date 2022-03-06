@@ -3,6 +3,7 @@
 
 #include "qmath.h"
 #include "vmath.h"
+#include "mmath.h"
 
 #include <pthread.h>
 
@@ -10,12 +11,14 @@ typedef struct
 {
     quat *attit;
     vec3 *ang_vel;
+    mat3* iner_tensor;
 } rbody_data_ref;
 
 typedef struct
 {
     quat attit;
     vec3 ang_vel;
+    mat3 iner_tensor;
 } rbody_data;
 
 typedef struct
@@ -37,6 +40,6 @@ void cntrl_proxy_add_protect(cntrl_proxy* proxy, pthread_mutex_t *comm_rbody_pro
 void cntrl_proxy_pull_comm_rbody(cntrl_proxy *proxy, rbody_data *repl);
 void cntrl_proxy_pull_curr_rbody(cntrl_proxy *proxy, rbody_data *repl);
 
-void cntrl_proxy_push_cntrl_mom(cntrl_proxy *proxy, vec3 *repl);
+void cntrl_proxy_push_cntrl_mom(cntrl_proxy *proxy, vec3 *mom);
 
 #endif

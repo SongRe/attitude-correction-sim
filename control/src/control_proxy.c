@@ -20,8 +20,12 @@ void cntrl_proxy_pull_comm_rbody(cntrl_proxy *proxy, rbody_data *repl)
 {
     pthread_mutex_lock(proxy->comm_rbody_protect);
 
-    repl->attit = *proxy->comm_rbody->attit;
-    repl->ang_vel = *proxy->comm_rbody->ang_vel;
+    if (proxy->comm_rbody->attit != NULL)
+        repl->attit = *proxy->comm_rbody->attit;
+    if (proxy->comm_rbody->ang_vel != NULL)
+        repl->ang_vel = *proxy->comm_rbody->ang_vel;
+    if (proxy->comm_rbody->iner_tensor != NULL)
+        repl->iner_tensor = *proxy->comm_rbody->iner_tensor;
 
     pthread_mutex_unlock(proxy->comm_rbody_protect);
 }
@@ -30,17 +34,21 @@ void cntrl_proxy_pull_curr_rbody(cntrl_proxy *proxy, rbody_data *repl)
 {
     pthread_mutex_lock(proxy->curr_rbody_protect);
 
-    repl->attit = *proxy->curr_rbody->attit;
-    repl->ang_vel = *proxy->curr_rbody->ang_vel;
+    if (proxy->curr_rbody->attit != NULL)
+        repl->attit = *proxy->curr_rbody->attit;
+    if (proxy->curr_rbody->ang_vel != NULL)
+        repl->ang_vel = *proxy->curr_rbody->ang_vel;
+    if (proxy->curr_rbody->iner_tensor != NULL)
+        repl->iner_tensor = *proxy->curr_rbody->iner_tensor;
 
     pthread_mutex_unlock(proxy->curr_rbody_protect);
 }
 
-void cntrl_proxy_push_cntrl_mom(cntrl_proxy *proxy, vec3 *repl)
+void cntrl_proxy_push_cntrl_mom(cntrl_proxy *proxy, vec3 *mom)
 {
     pthread_mutex_lock(proxy->cntrl_mom_protect);
 
-    *repl = *proxy->cntrl_mom;
+    *proxy->cntrl_mom = *mom;
 
     pthread_mutex_unlock(proxy->cntrl_mom_protect);
 }

@@ -9,5 +9,6 @@ quat calc_error_quat(quat* curr, quat* desir);
 
 void quat_print(quat* q);
 void vec3_print(vec3* v);
+void mat3_print(mat3* mt);
 
 #endif

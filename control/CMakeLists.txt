@@ -6,7 +6,7 @@ target_include_directories(cntrlinf PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(cntrlinf PUBLIC vmqmath)
 
 # creates the control algorithms library
-add_library(cntrlalg STATIC src/control_utils.c)
+add_library(cntrlalg STATIC src/control_utils.c src/algs/control_eigenaxis.c)
 target_include_directories(cntrlalg PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(cntrlalg PUBLIC vmqmath)
 

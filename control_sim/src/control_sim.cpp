@@ -29,7 +29,9 @@ void ControlPipeline(PhysicsSimProperties *sim_properties, cntrl_bridge *bridge,
         auto start = std::chrono::high_resolution_clock::now();
 
         cntrl_bridge_inf_delegate_update(bridge);
-        cntrl_bridge_inf_delegate_output(bridge);
+
+        // the bidirectional nature of the proxy can replace the output functionality
+        // cntrl_bridge_inf_delegate_output(bridge);
 
         auto stop = std::chrono::high_resolution_clock::now();
 
