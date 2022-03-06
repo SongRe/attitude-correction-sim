@@ -1,32 +1,42 @@
 #ifndef CONTROL_PROXY_H
 #define CONTROL_PROXY_H
 
-#include "math/qmath.h"
-#include "math/vmath.h"
+#include "qmath.h"
+#include "vmath.h"
 
 #include <pthread.h>
 
 typedef struct
 {
-    quat attit;
-    vec3 ang_vel;
-} att_cntrl_data;
+    quat *attit;
+    vec3 *ang_vel;
+} rbody_data_ref;
 
-// might be good at some stage to just create a massive buffer and have custom implementation in controller
-// and command/current state updaters interpret -> would make this more generic than current
 typedef struct
 {
-    att_cntrl_data *comm;
-    att_cntrl_data *curr;
+    quat attit;
+    vec3 ang_vel;
+} rbody_data;
 
-    pthread_mutex_t *comm_protect;
-    pthread_mutex_t *curr_protect;
+typedef struct
+{
+    rbody_data_ref *comm_rbody;
+    rbody_data_ref *curr_rbody;
+
+    vec3 *cntrl_mom;
+
+    // mutex protections for proxy interface
+    pthread_mutex_t *comm_rbody_protect;
+    pthread_mutex_t *curr_rbody_protect;
+    pthread_mutex_t *cntrl_mom_protect;
 } cntrl_proxy;
 
-cntrl_proxy cntrl_proxy_init(const att_cntrl_data *comm, const att_cntrl_data *curr);
-void cntrl_proxy_init_protect(cntrl_proxy *proxy, const pthread_mutex_t *comm_protect, const pthread_mutex_t *curr_protect);
+cntrl_proxy cntrl_proxy_init(rbody_data_ref *comm_rbody, rbody_data_ref *curr_rbody, vec3 *cntrl_mom);
+void cntrl_proxy_add_protect(cntrl_proxy* proxy, pthread_mutex_t *comm_rbody_protect, pthread_mutex_t *curr_rbody_protect, pthread_mutex_t *cntrl_mom_protect);
 
-void cntrl_proxy_pull_comm(const cntrl_proxy *proxy, att_cntrl_data *comm_repl);
-void cntrl_proxy_pull_curr(const cntrl_proxy *proxy, att_cntrl_data *curr_repl);
+void cntrl_proxy_pull_comm_rbody(cntrl_proxy *proxy, rbody_data *repl);
+void cntrl_proxy_pull_curr_rbody(cntrl_proxy *proxy, rbody_data *repl);
+
+void cntrl_proxy_push_cntrl_mom(cntrl_proxy *proxy, vec3 *repl);
 
 #endif

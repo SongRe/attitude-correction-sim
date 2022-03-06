@@ -10,6 +10,6 @@ extern "C"
 #include "physics_sim.hpp"
 
 // used to create a pipeline to access the interface
-void ControlPipeline(PhysicsSimProperties *sim_properties, cntrl_bridge *bridge, cntrl_inf *inf, double timestep);
+void ControlPipeline(PhysicsSimProperties *sim_properties, cntrl_bridge *bridge, double timestep);
 
 #endif

@@ -6,7 +6,8 @@
         "${workspaceFolder}/external/",
         "${workspaceFolder}/physics_sim/include/",
         "${workspaceFolder}/sim_viewer/include/",
-        "${workspaceFolder}/control_sim/include/"
+        "${workspaceFolder}/control_sim/include/",
+        "${workspaceFolder}/vmqmath/include/"
     ],
     "files.associations": {
         "quaternion.h": "c",
@@ -61,6 +62,9 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "vmath.h": "c"
+        "vmath.h": "c",
+        "assert.h": "c",
+        "control_bridge.h": "c",
+        "control_utils.h": "c"
     },
 }

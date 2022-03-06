@@ -2,7 +2,7 @@
 
 extern "C"
 {
-#include "math/vmath.h"
+#include "vmath.h"
 }
 
 #include <chrono>
@@ -25,12 +25,13 @@ void PhysicsPipeline(PhysicsSimProperties *sim_properties, double timestep)
         auto start = std::chrono::high_resolution_clock::now();
 
         sim_properties->rbody_mutex.lock();
-
         sim_properties->appl_mom_mutex.lock();
-        sim_properties->rbody.UpdateAngVel(sim_properties->appl_mom, timestep);
-        sim_properties->appl_mom_mutex.unlock();
 
+        // updates the rigidbody
+        sim_properties->rbody.UpdateAngVel(sim_properties->appl_mom, timestep);
         sim_properties->rbody.UpdateAttitude(timestep);
+
+        sim_properties->appl_mom_mutex.unlock();
         sim_properties->rbody_mutex.unlock();
 
         auto stop = std::chrono::high_resolution_clock::now();
