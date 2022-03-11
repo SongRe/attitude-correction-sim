@@ -14,7 +14,7 @@
 
 extern "C"
 {
-#include "math/qmath.h"
+#include "qmath.h"
 }
 
 #include "sim_viewer.hpp"

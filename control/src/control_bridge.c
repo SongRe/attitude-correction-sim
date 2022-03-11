@@ -1,12 +1,13 @@
 #include "control_bridge.h"
 #include <assert.h>
 
+#include <stdio.h>
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
-cntrl_bridge cntrl_bridge_init(const double cntrl_upd_freq, const bool suspended, const cntrl_proxy *proxy)
+cntrl_bridge cntrl_bridge_init(const bool suspended, const cntrl_proxy *proxy)
 {
     return (cntrl_bridge){
-        .cntrl_upd_freq = cntrl_upd_freq,
         .suspended = suspended,
         .proxy = proxy};
 }

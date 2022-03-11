@@ -3,9 +3,9 @@
 
 extern "C"
 {
-#include "math/vmath.h"
-#include "math/mmath.h"
-#include "math/qmath.h"
+#include "vmath.h"
+#include "mmath.h"
+#include "qmath.h"
 }
 
 struct Rigidbody

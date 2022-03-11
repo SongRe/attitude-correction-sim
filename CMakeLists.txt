@@ -13,22 +13,21 @@ find_package(OpenGL REQUIRED)
 find_package(Catch2 3 REQUIRED)
 
 # add the generated libraries
-# add_subdirectory(external)
 
+add_subdirectory(vmqmath)
 add_subdirectory(control)
+
 add_subdirectory(physics_sim)
 add_subdirectory(sim_viewer)
 add_subdirectory(control_sim)
 
-
-
 set(CMAKE_C)
 
-# add the include folder
-# include_directories(${CMAKE_SOURCE_DIR}/include)
-
 add_executable(sim_with_viewer sim_with_viewer.cpp)
-target_link_libraries(sim_with_viewer PUBLIC physicssim simviewer vmqmath)
+target_link_libraries(sim_with_viewer PUBLIC cntrlalg physicssim simviewer)
+
+add_executable(sim_with_control_viewer sim_with_control_viewer.cpp)
+target_link_libraries(sim_with_control_viewer PUBLIC cntrlalg physicssim simviewer controlsim)
 
 # copies asset files
 configure_file(${CMAKE_SOURCE_DIR}/assets/cubesat_model_tex.png ${CMAKE_BINARY_DIR}/assets/cubesat_model_tex.png COPYONLY)

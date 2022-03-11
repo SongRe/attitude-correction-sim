@@ -3,7 +3,7 @@
 
 extern "C"
 {
-#include "math/vmath.h"
+#include "vmath.h"
 }
 
 #include "rigidbody.hpp"

@@ -28,12 +28,10 @@ void ControlPipeline(PhysicsSimProperties *sim_properties, cntrl_bridge *bridge,
     {
         auto start = std::chrono::high_resolution_clock::now();
 
-        // pulls from the observer
-        att_cntrl_data comm, curr;
-        cntrl_proxy_pull_comm(bridge->proxy, &comm);
-        cntrl_proxy_pull_curr(bridge->proxy, &curr);
-
         cntrl_bridge_inf_delegate_update(bridge);
+
+        // the bidirectional nature of the proxy can replace the output functionality
+        // cntrl_bridge_inf_delegate_output(bridge);
 
         auto stop = std::chrono::high_resolution_clock::now();
 
