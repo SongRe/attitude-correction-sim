@@ -28,7 +28,7 @@ set(CMAKE_C)
 # include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_executable(sim_with_viewer sim_with_viewer.cpp)
-target_link_libraries(sim_with_viewer PUBLIC physicssim simviewer)
+target_link_libraries(sim_with_viewer PUBLIC physicssim simviewer vmqmath)
 
 # copies asset files
 configure_file(${CMAKE_SOURCE_DIR}/assets/cubesat_model_tex.png ${CMAKE_BINARY_DIR}/assets/cubesat_model_tex.png COPYONLY)
