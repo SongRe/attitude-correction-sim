@@ -7,7 +7,8 @@
         "${workspaceFolder}/physics_sim/include/",
         "${workspaceFolder}/sim_viewer/include/",
         "${workspaceFolder}/control_sim/include/",
-        "${workspaceFolder}/vmqmath/include/"
+        "${workspaceFolder}/vmqmath/include/",
+        "${workspaceFolder}/command_sim/include/"
     ],
     "files.associations": {
         "quaternion.h": "c",

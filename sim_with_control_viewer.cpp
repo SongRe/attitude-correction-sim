@@ -13,10 +13,12 @@ extern "C"
     // #include "control_test.h" // for initial testing
 
 #include "algs/control_eigenaxis.h"
+#include "algs/control_pid.h"
 }
 
 #include "physics_sim.hpp"
 #include "control_sim.hpp"
+#include "command_sim.hpp"
 #include "sim_viewer.hpp"
 
 int main()
@@ -62,18 +64,20 @@ int main()
 
     cntrl_bridge bridge = cntrl_bridge_init(false, &proxy);
     cntrl_inf inf = (cntrl_inf){
-        .cntrl_init = cntrl_eigenaxis_init,
-        .cntrl_update = cntrl_eigenaxis_update,
-        .cntrl_teardown = cntrl_eigenaxis_teardown,
-        .cntrl_output = cntrl_eigenaxis_output};
+        .cntrl_init = cntrl_pid_init,
+        .cntrl_update = cntrl_pid_update,
+        .cntrl_teardown = cntrl_pid_teardown,
+        .cntrl_output = cntrl_pid_output};
     bridge.inf = &inf;
 
-    std::thread thread_physics(PhysicsPipeline, &sim_properties, 0.01);         // update at 100 Hz
-    std::thread thread_control(ControlPipeline, &sim_properties, &bridge, 0.1); // update at 10 Hz
-    std::thread thread_render(RenderPipeline, &sim_properties, 1.0f / 60);      // update at 60 FPS
+    std::thread thread_physics(PhysicsPipeline, &sim_properties, 0.01);              // update at 100 Hz
+    std::thread thread_control(ControlPipeline, &sim_properties, &bridge, 1.0 / 20); // update at 20 Hz
+    std::thread thread_command(CommandPipeline, &sim_properties, &bridge); // update at 20 Hz
+    std::thread thread_render(RenderPipeline, &sim_properties, 1.0f / 60);           // update at 60 FPS
 
     thread_physics.join();
     thread_control.join();
+    thread_command.join();
     thread_render.join();
 
     return EXIT_SUCCESS;

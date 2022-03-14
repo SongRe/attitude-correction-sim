@@ -22,13 +22,13 @@ inline bool IsRunning(PhysicsSimProperties *sim_properties)
 
 void ControlPipeline(PhysicsSimProperties *sim_properties, cntrl_bridge *bridge, double timestep)
 {
-    cntrl_bridge_inf_delegate_init(bridge);
+    cntrl_bridge_inf_delegate_init(bridge, timestep);
 
     while (IsRunning(sim_properties))
     {
         auto start = std::chrono::high_resolution_clock::now();
 
-        cntrl_bridge_inf_delegate_update(bridge);
+        cntrl_bridge_inf_delegate_update(bridge, timestep);
 
         // the bidirectional nature of the proxy can replace the output functionality
         // cntrl_bridge_inf_delegate_output(bridge);
@@ -42,5 +42,5 @@ void ControlPipeline(PhysicsSimProperties *sim_properties, cntrl_bridge *bridge,
         std::this_thread::sleep_for(wait_duration);
     }
 
-    cntrl_bridge_inf_delegate_teardown(bridge);
+    cntrl_bridge_inf_delegate_teardown(bridge, timestep);
 }

@@ -35,9 +35,9 @@ vec3 calc_cntrl_mom(mat3 *gain_d, mat3 *gain_p, vec3 *err_ang_vel, vec3 *err_att
     return vec3_smul(&sum, -1);
 }
 
-void cntrl_eigenaxis_init(cntrl_proxy *proxy, void **data)
+void cntrl_eigenaxis_init(cntrl_proxy *proxy, void **data, double timestep)
 {
-    printf("cntrl_eigenaxis: init\n");
+    // printf("cntrl_eigenaxis: init\n");
 
     *data = malloc(sizeof(cntrl_eigenaxis));
     cntrl_eigenaxis *cntrl_data = (cntrl_eigenaxis *)*data;
@@ -50,8 +50,8 @@ void cntrl_eigenaxis_init(cntrl_proxy *proxy, void **data)
     rbody_data curr_data;
     cntrl_proxy_pull_curr_rbody(proxy, &curr_data);
 
-    printf("Inertia tensor:\n");
-    mat3_print(&curr_data.iner_tensor);
+    // printf("Inertia tensor:\n");
+    // mat3_print(&curr_data.iner_tensor);
 
     *cntrl_data = (cntrl_eigenaxis){
         .gain_d = gain_d,
@@ -60,9 +60,9 @@ void cntrl_eigenaxis_init(cntrl_proxy *proxy, void **data)
         .mt_gain_p = mat3_smul(&curr_data.iner_tensor, gain_p)};
 }
 
-void cntrl_eigenaxis_update(cntrl_proxy *proxy, void **data)
+void cntrl_eigenaxis_update(cntrl_proxy *proxy, void **data, double timestep)
 {
-    printf("cntrl_eigenaxis: update\n");
+    // printf("cntrl_eigenaxis: update\n");
 
     cntrl_eigenaxis *cntrl_data = (cntrl_eigenaxis *)*data;
 
@@ -71,8 +71,8 @@ void cntrl_eigenaxis_update(cntrl_proxy *proxy, void **data)
     cntrl_proxy_pull_comm_rbody(proxy, &comm_data);
     cntrl_proxy_pull_curr_rbody(proxy, &curr_data);
 
-    printf("Current angular velocity:\n");
-    vec3_print(&curr_data.ang_vel);
+    // printf("Current angular velocity:\n");
+    // vec3_print(&curr_data.ang_vel);
 
     // calculates the error values required for controller calculation
     vec3 comm_ang_vel_neg = vec3_smul(&comm_data.ang_vel, -1);
@@ -81,26 +81,28 @@ void cntrl_eigenaxis_update(cntrl_proxy *proxy, void **data)
     quat err_attit = calc_error_quat(&curr_data.attit, &comm_data.attit);
 
     // calculates the required moment and delegates the proxy to push the value
-    vec3 moment = calc_cntrl_mom(&cntrl_data->mt_gain_d, &cntrl_data->mt_gain_p, &err_ang_vel, &err_attit.v);
-    printf("Calculated commanded moment:\n");
-    vec3_print(&moment);
+    // vec3 moment = calc_cntrl_mom(&cntrl_data->mt_gain_d, &cntrl_data->mt_gain_p, &err_ang_vel, &err_attit.v);
+    vec3 moment = calc_cntrl_mom_with_gyro_decoupl(&curr_data.iner_tensor, &comm_data.ang_vel, &cntrl_data->mt_gain_d, &cntrl_data->mt_gain_p, &err_ang_vel, &err_attit.v);
+
+    // printf("Calculated commanded moment:\n");
+    // vec3_print(&moment);
 
     cntrl_proxy_push_cntrl_mom(proxy, &moment);
 }
 
-void cntrl_eigenaxis_reset(cntrl_proxy *proxy, void **data)
+void cntrl_eigenaxis_reset(cntrl_proxy *proxy, void **data, double timestep)
 {
-    printf("cntrl_eigenaxis: reset\n");
+    // printf("cntrl_eigenaxis: reset\n");
     // there is nothing to reset with this controller
 }
 
-void cntrl_eigenaxis_teardown(cntrl_proxy *proxy, void **data)
+void cntrl_eigenaxis_teardown(cntrl_proxy *proxy, void **data, double timestep)
 {
-    printf("cntrl_eigenaxis: teardown\n");
+    // printf("cntrl_eigenaxis: teardown\n");
     free(*data);
 }
 
-void *cntrl_eigenaxis_output(cntrl_proxy *proxy, void **data)
+void *cntrl_eigenaxis_output(cntrl_proxy *proxy, void **data, double timestep)
 {
-    printf("cntrl_eigenaxis: output\n");
+    // printf("cntrl_eigenaxis: output\n");
 }

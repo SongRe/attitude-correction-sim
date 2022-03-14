@@ -16,6 +16,13 @@ vec2 vec2_add(const vec2 *v1, const vec2 *v2)
         .y = v1->y + v2->y};
 }
 
+vec2 vec2_subtract(const vec2 *v1, const vec2 *v2)
+{
+    return (vec2){
+        .x = v1->x - v2->x,
+        .y = v1->y - v2->y};
+}
+
 vec2 vec2_smul(const vec2 *v, const double s)
 {
     return (vec2){
@@ -57,6 +64,14 @@ vec3 vec3_add(const vec3 *v1, const vec3 *v2)
         .x = v1->x + v2->x,
         .y = v1->y + v2->y,
         .z = v1->z + v2->z};
+}
+
+vec3 vec3_subtract(const vec3 *v1, const vec3 *v2)
+{
+    return (vec3){
+        .x = v1->x - v2->x,
+        .y = v1->y - v2->y,
+        .z = v1->z - v2->z};
 }
 
 vec3 vec3_smul(const vec3 *v, const double s)
@@ -112,6 +127,15 @@ vec4 vec4_add(const vec4 *v1, const vec4 *v2)
         .y = v1->y + v2->y,
         .z = v1->z + v2->z,
         .w = v1->w + v2->w};
+}
+
+vec4 vec4_subtract(const vec4 *v1, const vec4 *v2)
+{
+    return (vec4){
+        .x = v1->x - v2->x,
+        .y = v1->y - v2->y,
+        .z = v1->z - v2->z,
+        .w = v1->w - v2->w};
 }
 
 vec4 vec4_smul(const vec4 *v, const double s)
