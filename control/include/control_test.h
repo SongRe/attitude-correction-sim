@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void cntrl_test_init(cntrl_proxy *proxy, void **data)
+void cntrl_test_init(cntrl_proxy *proxy, void **data, double timestep)
 {
     printf("cntrl_test_init called -> will allocate data\n");
 
@@ -19,7 +19,7 @@ void cntrl_test_init(cntrl_proxy *proxy, void **data)
     memcpy(*data, msg, 27);
 }
 
-void cntrl_test_update(cntrl_proxy *proxy, void **data)
+void cntrl_test_update(cntrl_proxy *proxy, void **data, double timestep)
 {
     printf("cntrl_test_update called\n");
 
@@ -33,14 +33,14 @@ void cntrl_test_update(cntrl_proxy *proxy, void **data)
     vec3_print(&comm_rbody_data.ang_vel);
 }
 
-void cntrl_test_teardown(cntrl_proxy *proxy, void **data)
+void cntrl_test_teardown(cntrl_proxy *proxy, void **data, double timestep)
 {
     printf("cntrl_test_teardown called -> will free data\n");
 
     free(*data);
 }
 
-void *cntrl_test_output(cntrl_proxy *proxy, void **data)
+void *cntrl_test_output(cntrl_proxy *proxy, void **data, double timestep)
 {
     printf("cntrl_test_output called\n");
     return *(data);
