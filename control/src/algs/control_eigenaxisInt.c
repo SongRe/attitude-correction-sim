@@ -9,9 +9,15 @@
 #include <stdio.h>
 #include <pthread.h>
 
-vec3 calc_cntrl_mom_with_gyro_decoupl(mat3 *iner_tensor, vec3 *ang_vel, mat3 *gain_d, mat3 *gain_p, vec3 *err_ang_vel, vec3 *err_attit_v)
+vec3 prev_err_ang_vel;
+vec3 prev_err_i;
+vec3 prev_err_f;
+
+
+vec3 calc_cntrl_mom_with_gyro_decoupl(mat3 *iner_tensor, vec3 *ang_vel, mat3 *gain_d, mat3 *gain_p, mat3 *gain_i, vec3 *err_ang_vel, vec3 *err_attit_v)
 {
     // M_cmd = -w x Jw - K_d w_e - K_p q_ev
+
 
     // first term
     vec3 tensor_vel_prod = mat3_vmul(iner_tensor, ang_vel);
@@ -19,18 +25,32 @@ vec3 calc_cntrl_mom_with_gyro_decoupl(mat3 *iner_tensor, vec3 *ang_vel, mat3 *ga
     vec3 vel_cross_prod_neg = vec3_smul(&vel_cross_prod, -1);
 
     // second and third terms
-    vec3 gain_prods = calc_cntrl_mom(gain_d, gain_p, err_ang_vel, err_attit_v);
+    vec3 gain_prods = calc_cntrl_mom(gain_d, gain_p, gain_i, err_ang_vel, err_attit_v);
 
     return vec3_add(&vel_cross_prod_neg, &gain_prods);
 }
 
-vec3 calc_cntrl_mom(mat3 *gain_d, mat3 *gain_p, vec3 *err_ang_vel, vec3 *err_attit_v)
+vec3 calc_cntrl_mom(mat3 *gain_d, mat3 *gain_p, mat3 *gain_i, vec3 *err_ang_vel, vec3 *err_attit_v)
 {
-    // M_cmd = - K_d w_e - K_p q_ev
+    // M_cmd = - K_d w_e - K_p q_ev - K_i * integral(q_ev)
+    // in discrete time, this equation becomes:
+    // u(k) = k_p * e(k) + k_i * e_i(k) + k_d * e_f(k);
+    /*
+        where k is the kth iteration 
+        e(k) is just e(k) - attit_v
+        e_i(k) = e_i(k - 1) + T_s * e(k-1)
+        e_f(k) = a * e(k) + (1 - a) e_f(k - 1);
 
-    vec3 gain_d_prod = mat3_vmul(gain_d, err_ang_vel);
+    */
+    //maybe we should put the angular velocity AND the attitude through each P,I,D calculationx
+   
+    vec3 *err_filtered;
+
+    vec3 gain_d_prod = mat3_vmul(gain_d, err_filtered);  
     vec3 gain_p_prod = mat3_vmul(gain_p, err_attit_v);
+    vec3 gain_i_prod = mat3_vmul(gain_i, err_filtered);
     vec3 sum = vec3_add(&gain_d_prod, &gain_p_prod);
+    sum = vec3_add(&sum, &gain_i_prod);
 
     return vec3_smul(&sum, -1);
 }
@@ -44,6 +64,9 @@ void cntrl_eigenaxis_init(cntrl_proxy *proxy, void **data)
 
     const double gain_d = 1.0;
     const double gain_p = 0.5;
+    const double gain_i = 0.5;
+    const double timeStep = 100;
+    const double timeFilter = 100;
 
     // NOTE: J is inertia matrix w.r.t. body-fixed frame
 
@@ -56,12 +79,25 @@ void cntrl_eigenaxis_init(cntrl_proxy *proxy, void **data)
     *cntrl_data = (cntrl_eigenaxis){
         .gain_d = gain_d,
         .gain_p = gain_p,
+        .gain_i = gain_i,
         .mt_gain_d = mat3_smul(&curr_data.iner_tensor, gain_d),
-        .mt_gain_p = mat3_smul(&curr_data.iner_tensor, gain_p)};
+        .mt_gain_p = mat3_smul(&curr_data.iner_tensor, gain_p),
+        .mt_gain_i = mat3_smul(&curr_data.iner_tensor, gain_i),
+        .time_sample_inter = timeStep,
+        .time_filter = timeFilter};
 }
 
 void cntrl_eigenaxis_update(cntrl_proxy *proxy, void **data)
 {
+    /*
+        u(k) = k_p * e(k) + k_i * e_i(k) + k_d * e_f(k);
+        where k is the kth iteration 
+        e(k) is just e(k) - attit_v
+        e_i(k) = e_i(k - 1) + T_s * e(k-1)
+        e_f(k) = a * e(k) + (1 - a) e_f(k - 1);
+        a is T_s / T_f, where T_f is the filtering constant
+
+    */
     printf("cntrl_eigenaxis: update\n");
 
     cntrl_eigenaxis *cntrl_data = (cntrl_eigenaxis *)*data;
@@ -76,9 +112,9 @@ void cntrl_eigenaxis_update(cntrl_proxy *proxy, void **data)
 
     // calculates the error values required for controller calculation
     vec3 comm_ang_vel_neg = vec3_smul(&comm_data.ang_vel, -1);
-    vec3 err_ang_vel = vec3_add(&curr_data.ang_vel, &comm_ang_vel_neg);
+    vec3 err_ang_vel = vec3_add(&curr_data.ang_vel, &comm_ang_vel_neg); //
 
-    quat err_attit = calc_error_quat(&curr_data.attit, &comm_data.attit);
+    quat err_attit = calc_error_quat(&curr_data.attit, &comm_data.attit); // this is e(k)
 
     // calculates the required moment and delegates the proxy to push the value
     vec3 moment = calc_cntrl_mom(&cntrl_data->mt_gain_d, &cntrl_data->mt_gain_p, &err_ang_vel, &err_attit.v);
