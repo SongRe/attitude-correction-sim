@@ -40,6 +40,7 @@ void cntrl_proxy_add_protect(cntrl_proxy* proxy, pthread_mutex_t *comm_rbody_pro
 void cntrl_proxy_pull_comm_rbody(cntrl_proxy *proxy, rbody_data *repl);
 void cntrl_proxy_pull_curr_rbody(cntrl_proxy *proxy, rbody_data *repl);
 
+void cntrl_proxy_push_comm_rbody(cntrl_proxy *proxy, rbody_data* data);
 void cntrl_proxy_push_cntrl_mom(cntrl_proxy *proxy, vec3 *mom);
 
 #endif

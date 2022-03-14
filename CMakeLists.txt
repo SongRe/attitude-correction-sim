@@ -20,6 +20,7 @@ add_subdirectory(control)
 add_subdirectory(physics_sim)
 add_subdirectory(sim_viewer)
 add_subdirectory(control_sim)
+add_subdirectory(command_sim)
 
 set(CMAKE_C)
 
@@ -27,7 +28,7 @@ add_executable(sim_with_viewer sim_with_viewer.cpp)
 target_link_libraries(sim_with_viewer PUBLIC cntrlalg physicssim simviewer)
 
 add_executable(sim_with_control_viewer sim_with_control_viewer.cpp)
-target_link_libraries(sim_with_control_viewer PUBLIC cntrlalg physicssim simviewer controlsim)
+target_link_libraries(sim_with_control_viewer PUBLIC cntrlalg commandsim physicssim simviewer controlsim)
 
 # copies asset files
 configure_file(${CMAKE_SOURCE_DIR}/assets/cubesat_model_tex.png ${CMAKE_BINARY_DIR}/assets/cubesat_model_tex.png COPYONLY)

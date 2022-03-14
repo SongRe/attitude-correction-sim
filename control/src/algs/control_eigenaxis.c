@@ -81,7 +81,9 @@ void cntrl_eigenaxis_update(cntrl_proxy *proxy, void **data, double timestep)
     quat err_attit = calc_error_quat(&curr_data.attit, &comm_data.attit);
 
     // calculates the required moment and delegates the proxy to push the value
-    vec3 moment = calc_cntrl_mom(&cntrl_data->mt_gain_d, &cntrl_data->mt_gain_p, &err_ang_vel, &err_attit.v);
+    // vec3 moment = calc_cntrl_mom(&cntrl_data->mt_gain_d, &cntrl_data->mt_gain_p, &err_ang_vel, &err_attit.v);
+    vec3 moment = calc_cntrl_mom_with_gyro_decoupl(&curr_data.iner_tensor, &comm_data.ang_vel, &cntrl_data->mt_gain_d, &cntrl_data->mt_gain_p, &err_ang_vel, &err_attit.v);
+
     // printf("Calculated commanded moment:\n");
     // vec3_print(&moment);
 

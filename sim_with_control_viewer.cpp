@@ -18,6 +18,7 @@ extern "C"
 
 #include "physics_sim.hpp"
 #include "control_sim.hpp"
+#include "command_sim.hpp"
 #include "sim_viewer.hpp"
 
 int main()
@@ -69,12 +70,14 @@ int main()
         .cntrl_output = cntrl_pid_output};
     bridge.inf = &inf;
 
-    std::thread thread_physics(PhysicsPipeline, &sim_properties, 0.01);         // update at 100 Hz
-    std::thread thread_control(ControlPipeline, &sim_properties, &bridge, 0.1); // update at 10 Hz
-    std::thread thread_render(RenderPipeline, &sim_properties, 1.0f / 60);      // update at 60 FPS
+    std::thread thread_physics(PhysicsPipeline, &sim_properties, 0.01);              // update at 100 Hz
+    std::thread thread_control(ControlPipeline, &sim_properties, &bridge, 1.0 / 20); // update at 20 Hz
+    std::thread thread_command(CommandPipeline, &sim_properties, &bridge); // update at 20 Hz
+    std::thread thread_render(RenderPipeline, &sim_properties, 1.0f / 60);           // update at 60 FPS
 
     thread_physics.join();
     thread_control.join();
+    thread_command.join();
     thread_render.join();
 
     return EXIT_SUCCESS;
