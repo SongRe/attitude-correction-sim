@@ -25,17 +25,17 @@ vec3 calc_pid_output(cntrl_pid *pid, mat3 *iner_tensor, vec3 *err_v, vec3 *curr_
          integr.y < pid->integr.max.y &&
          integr.z < pid->integr.max.z)) // checks to ensure the new integral doesn't exceed maximum
     {
-        printf("Integrator within limits!\n");
+        // printf("Integrator within limits!\n");
         // vec3_print(&integr);
         pid->integr.val = integr;
     }
     else
     {
-        printf("Integrator outside of limts!\n");
+        // printf("Integrator outside of limts!\n");
         // vec3_print(&integr);
     }
-    printf("Integrator:\n");
-    vec3_print(&pid->integr.val);
+    // printf("Integrator:\n");
+    // vec3_print(&pid->integr.val);
 
     vec3 i_out = pid->integr.val;
 
@@ -56,7 +56,7 @@ vec3 calc_pid_output(cntrl_pid *pid, mat3 *iner_tensor, vec3 *err_v, vec3 *curr_
 
 void cntrl_pid_init(cntrl_proxy *proxy, void **data, double timestep)
 {
-    printf("PID control: init\n");
+    // printf("PID control: init\n");
 
     *data = malloc(sizeof(cntrl_pid));
     cntrl_pid *pid_data = (cntrl_pid *)*data;
@@ -85,7 +85,7 @@ void cntrl_pid_init(cntrl_proxy *proxy, void **data, double timestep)
 
 void cntrl_pid_update(cntrl_proxy *proxy, void **data, double timestep)
 {
-    printf("PID control: update\n");
+    // printf("PID control: update\n");
 
     cntrl_pid *pid_data = (cntrl_pid *)*data;
 
@@ -93,14 +93,14 @@ void cntrl_pid_update(cntrl_proxy *proxy, void **data, double timestep)
     cntrl_proxy_pull_comm_rbody(proxy, &comm_data);
     cntrl_proxy_pull_curr_rbody(proxy, &curr_data);
 
-    printf("Current angular velocity:\n");
-    vec3_print(&curr_data.ang_vel);
+    // printf("Current angular velocity:\n");
+    // vec3_print(&curr_data.ang_vel);
 
     quat err_attit = calc_error_quat(&curr_data.attit, &comm_data.attit);
 
     vec3 moment = calc_pid_output(pid_data, &curr_data.iner_tensor, &err_attit.v, &curr_data.attit.v, timestep);
-    printf("Calculated commanded moment:\n");
-    vec3_print(&moment);
+    // printf("Calculated commanded moment:\n");
+    // vec3_print(&moment);
     cntrl_proxy_push_cntrl_mom(proxy, &moment);
 
     // printf("Integrator:\n");
@@ -109,7 +109,7 @@ void cntrl_pid_update(cntrl_proxy *proxy, void **data, double timestep)
 
 void cntrl_pid_reset(cntrl_proxy *proxy, void **data, double timestep)
 {
-    printf("PID control: reset\n");
+    // printf("PID control: reset\n");
 
     cntrl_pid *pid_data = (cntrl_pid *)*data;
     pid_data->integr.val = vec3_init(0, 0, 0);
@@ -117,11 +117,11 @@ void cntrl_pid_reset(cntrl_proxy *proxy, void **data, double timestep)
 
 void cntrl_pid_teardown(cntrl_proxy *proxy, void **data, double timestep)
 {
-    printf("PID control: teardown\n");
+    // printf("PID control: teardown\n");
     free(*data);
 }
 
 void *cntrl_pid_output(cntrl_proxy *proxy, void **data, double timestep)
 {
-    printf("PID control: output\n");
+    // printf("PID control: output\n");
 }
