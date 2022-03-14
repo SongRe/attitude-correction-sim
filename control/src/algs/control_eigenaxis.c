@@ -35,7 +35,7 @@ vec3 calc_cntrl_mom(mat3 *gain_d, mat3 *gain_p, vec3 *err_ang_vel, vec3 *err_att
     return vec3_smul(&sum, -1);
 }
 
-void cntrl_eigenaxis_init(cntrl_proxy *proxy, void **data)
+void cntrl_eigenaxis_init(cntrl_proxy *proxy, void **data, double timestep)
 {
     printf("cntrl_eigenaxis: init\n");
 
@@ -60,7 +60,7 @@ void cntrl_eigenaxis_init(cntrl_proxy *proxy, void **data)
         .mt_gain_p = mat3_smul(&curr_data.iner_tensor, gain_p)};
 }
 
-void cntrl_eigenaxis_update(cntrl_proxy *proxy, void **data)
+void cntrl_eigenaxis_update(cntrl_proxy *proxy, void **data, double timestep)
 {
     printf("cntrl_eigenaxis: update\n");
 
@@ -88,19 +88,19 @@ void cntrl_eigenaxis_update(cntrl_proxy *proxy, void **data)
     cntrl_proxy_push_cntrl_mom(proxy, &moment);
 }
 
-void cntrl_eigenaxis_reset(cntrl_proxy *proxy, void **data)
+void cntrl_eigenaxis_reset(cntrl_proxy *proxy, void **data, double timestep)
 {
     printf("cntrl_eigenaxis: reset\n");
     // there is nothing to reset with this controller
 }
 
-void cntrl_eigenaxis_teardown(cntrl_proxy *proxy, void **data)
+void cntrl_eigenaxis_teardown(cntrl_proxy *proxy, void **data, double timestep)
 {
     printf("cntrl_eigenaxis: teardown\n");
     free(*data);
 }
 
-void *cntrl_eigenaxis_output(cntrl_proxy *proxy, void **data)
+void *cntrl_eigenaxis_output(cntrl_proxy *proxy, void **data, double timestep)
 {
     printf("cntrl_eigenaxis: output\n");
 }

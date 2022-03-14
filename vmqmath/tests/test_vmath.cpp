@@ -36,6 +36,23 @@ TEST_CASE("add", "[vec2]")
     REQUIRE(memcmp(&v_test, &v_expect, sizeof(vec2)) == 0);
 }
 
+TEST_CASE("subtract", "[vec2]")
+{
+    vec2 v1 = (vec2){
+        .x = 1,
+        .y = 2};
+    vec2 v2 = (vec2){
+        .x = 3,
+        .y = -4};
+
+    vec2 v_test = vec2_subtract(&v1, &v2);
+    vec2 v_expect = (vec2){
+        .x = -2,
+        .y = 6};
+
+    REQUIRE(memcmp(&v_test, &v_expect, sizeof(vec2)) == 0);
+}
+
 TEST_CASE("scalar multiplication", "[vec2]")
 {
     vec2 v = (vec2){
@@ -117,6 +134,26 @@ TEST_CASE("add", "[vec3]")
         .x = 4,
         .y = -2,
         .z = 8};
+
+    REQUIRE(memcmp(&v_test, &v_expect, sizeof(vec3)) == 0);
+}
+
+TEST_CASE("subtract", "[vec3]")
+{
+    vec3 v1 = (vec3){
+        .x = 1,
+        .y = 2,
+        .z = 3};
+    vec3 v2 = (vec3){
+        .x = 3,
+        .y = -4,
+        .z = 5};
+
+    vec3 v_test = vec3_subtract(&v1, &v2);
+    vec3 v_expect = (vec3){
+        .x = -2,
+        .y = 6,
+        .z = -2};
 
     REQUIRE(memcmp(&v_test, &v_expect, sizeof(vec3)) == 0);
 }
@@ -234,6 +271,29 @@ TEST_CASE("add", "[vec4]")
         .y = -2,
         .z = 6,
         .w = 0};
+
+    REQUIRE(memcmp(&v_test, &v_expect, sizeof(vec4)) == 0);
+}
+
+TEST_CASE("subtract", "[vec4]")
+{
+    vec4 v1 = (vec4){
+        .x = 1,
+        .y = 2,
+        .z = 3,
+        .w = 4};
+    vec4 v2 = (vec4){
+        .x = 3,
+        .y = -4,
+        .z = 3,
+        .w = -4};
+
+    vec4 v_test = vec4_subtract(&v1, &v2);
+    vec4 v_expect = (vec4){
+        .x = -2,
+        .y = 6,
+        .z = 0,
+        .w = 8};
 
     REQUIRE(memcmp(&v_test, &v_expect, sizeof(vec4)) == 0);
 }
