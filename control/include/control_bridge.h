@@ -8,11 +8,11 @@ typedef struct
 {
     void *data;
 
-    void (*cntrl_init)(cntrl_proxy *, void **);
-    void (*cntrl_update)(cntrl_proxy *, void **);
-    void (*cntrl_reset)(cntrl_proxy *, void **);
-    void (*cntrl_teardown)(cntrl_proxy *, void **);
-    void *(*cntrl_output)(cntrl_proxy *, void **);
+    void (*cntrl_init)(cntrl_proxy *, void **, double timestep);
+    void (*cntrl_update)(cntrl_proxy *, void **, double timestep);
+    void (*cntrl_reset)(cntrl_proxy *, void **, double timestep);
+    void (*cntrl_teardown)(cntrl_proxy *, void **, double timestep);
+    void *(*cntrl_output)(cntrl_proxy *, void **, double timestep);
 } cntrl_inf;
 
 typedef struct
@@ -30,10 +30,10 @@ void cntrl_bridge_inf_suspend(cntrl_bridge *cntrl_bridge);
 void cntrl_bridge_inf_resume(cntrl_bridge *cntrl_bridge);
 
 // defines interface
-void cntrl_bridge_inf_delegate_init(cntrl_bridge *bridge);
-void cntrl_bridge_inf_delegate_update(cntrl_bridge *bridge);
-void cntrl_bridge_inf_delegate_reset(cntrl_bridge *bridge);
-void cntrl_bridge_inf_delegate_teardown(cntrl_bridge *bridge);
-void *cntrl_bridge_inf_delegate_output(cntrl_bridge *bridge);
+void cntrl_bridge_inf_delegate_init(cntrl_bridge *bridge, double timestep);
+void cntrl_bridge_inf_delegate_update(cntrl_bridge *bridge, double timestep);
+void cntrl_bridge_inf_delegate_reset(cntrl_bridge *bridge, double timestep);
+void cntrl_bridge_inf_delegate_teardown(cntrl_bridge *bridge, double timestep);
+void *cntrl_bridge_inf_delegate_output(cntrl_bridge *bridge, double timestep);
 
 #endif
