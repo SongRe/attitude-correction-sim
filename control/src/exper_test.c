@@ -54,13 +54,13 @@ int main()
     bridge.inf = &inf;
 
     // test out the method implementation (delegation to the interface)
-    cntrl_bridge_inf_delegate_init(&bridge);
-    cntrl_bridge_inf_delegate_update(&bridge); // this should pull from the observer
-    printf("Output data from delegated output:%s\n", (const char *)cntrl_bridge_inf_delegate_output(&bridge));
-    cntrl_bridge_inf_delegate_teardown(&bridge);
+    cntrl_bridge_inf_delegate_init(&bridge, 0.1);
+    cntrl_bridge_inf_delegate_update(&bridge, 0.1); // this should pull from the observer
+    printf("Output data from delegated output:%s\n", (const char *)cntrl_bridge_inf_delegate_output(&bridge, 0.1));
+    cntrl_bridge_inf_delegate_teardown(&bridge, 0.1);
 
     // this should have an assertion fail as implementation not assigned to interface
-    cntrl_bridge_inf_delegate_reset(&bridge);
+    cntrl_bridge_inf_delegate_reset(&bridge, 0.1);
 
     return 0;
 }
